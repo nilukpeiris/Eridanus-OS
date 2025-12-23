@@ -630,7 +630,7 @@
 
     <script>
         
-        // --- CORE GAME STATE & CONFIGURATION (Unchanged) ---
+        // --- CORE GAME STATE & CONFIGURATION ---
         const PASSWORD_MEDIC = "HEALTH4";
         const PASSWORD_HR = "HR99";
         const ENGINE_FIX_CODE = "FIXENGINESNOW"; 
@@ -638,8 +638,11 @@
         const ERIDANI_COORDS = "4921";
         const EARTH_COORDS = "5067";
 
-        // MODIFIED: New depletion rate for 75% drop in 3600 seconds (1 hour)
-        const O2_DECAY_RATE = 0.020833; 
+        // START MODIFICATION: New dynamic O2 Rates
+        const O2_DECAY_RATE_CRITICAL = 0.04; // Both Hull and Engine Down
+        const O2_DECAY_RATE_WARNING = 0.02;  // One System Repaired
+        const O2_RECOVERY_RATE = 0.05;      // Both Systems Repaired (0.05% per second)
+        // END MODIFICATION
         
         let shipData = {
             hull: { status: "SEAL BREACH - FORE SECTION EXTERNAL HULL", level: 50 },
@@ -679,9 +682,11 @@
         ];
         let currentClueIndex = -1; 
         let navUnlocked = false;
-        let o2DepletionInterval; 
-        let o2RecoveryInterval; 
+        
+        // START MODIFICATION: Use one interval for dynamic logic
+        let o2DynamicInterval; 
         let o2RecoveryStarted = false; 
+        // END MODIFICATION
 
         // --- CORE LOGIC FUNCTIONS (Unchanged) ---
         const log = document.getElementById('terminalLog');
@@ -783,8 +788,7 @@
             await sleep(1500);
             
             shipData.engine.status = "ONLINE / STANDBY";
-            // Start O2 recovery after engine fix is confirmed
-            startO2Recovery(); 
+            // startO2Recovery() call removed. The dynamic loop handles the O2 change now. 
             
             document.getElementById('engineCodeInput').disabled = true;
             document.querySelectorAll('#engineeringPanel button').forEach(btn => btn.disabled = false);
@@ -851,7 +855,7 @@
             
             await sleep(1500);
             
-            shipData.hull.status = "SEALED / STABLE";
+            shipData.hull.status = "NOMINAL (SEALED)"; // Changed status text for easier check in O2 logic
             document.getElementById('hullCodeInput').disabled = true;
             document.querySelectorAll('#engineeringPanel button').forEach(btn => btn.disabled = false);
             document.querySelectorAll('#engineeringPanel input').forEach(input => input.disabled = false);
@@ -859,10 +863,11 @@
             updateDashboard();
         }
 
-        // --- UI STATUS UPDATE FUNCTIONS (Unchanged) ---
+        // --- UI STATUS UPDATE FUNCTIONS (Modified) ---
         function getStatusClass(statusText) {
              statusText = statusText.toUpperCase();
              if (statusText.includes("CRITICAL") || statusText.includes("FAILURE") || statusText.includes("CORRUPTED") || statusText.includes("BREACH")) { return "critical"; } 
+             // Note: Changed "SEALED / STABLE" to "NOMINAL (SEALED)" in hullRepairAnimation to match previous logic examples for consistency.
              else if (statusText.includes("STABLE") || statusText.includes("NOMINAL") || statusText.includes("ONLINE") || statusText.includes("SEALED")) { return "nominal"; } 
              else if (statusText.includes("RESERVE") || statusText.includes("WARNING")) { return "warning"; } 
              else if (statusText.includes("OFFLINE") || statusText.includes("UNKNOWN")) { return "offline"; }
@@ -883,60 +888,119 @@
             document.getElementById('coordStatus').textContent = shipData.coords.status;
             document.getElementById('coordStatus').className = "value " + getStatusClass(shipData.coords.status);
 
-            // Use toFixed(2) for 2 decimal places
+            // O2 GAUGE UPDATE
+            const o2ValueElem = document.getElementById('o2Value');
+            const o2Gauge = document.getElementById('o2Gauge');
             let o2Level = shipData.o2.level;
-            let o2Display = o2Level.toFixed(2);
-            let o2GaugeValue = Math.round(o2Level); 
-
-            document.getElementById('o2Value').textContent = o2Display;
-            document.getElementById('o2Gauge').style.width = o2GaugeValue + '%';
             
-            let o2Color = '#00ffaa'; 
-            let o2Class = "nominal";
-            // Use the floating-point value for critical/warning checks
-            if (o2Level <= 10) { 
-                o2Color = '#ff0000'; 
-                o2Class = "critical";
-            } else if (o2Level < 35) { 
-                o2Color = '#ffff00'; 
-                o2Class = "warning";
+            o2Gauge.style.width = o2Level.toFixed(2) + '%'; 
+            
+            let gaugeClass = 'nominal';
+            if (o2Level < 10) {
+                gaugeClass = 'critical';
+            } else if (o2Level < 35) {
+                gaugeClass = 'warning';
             }
+            o2Gauge.className = 'gauge-fill ' + gaugeClass;
+
+            // O2 RATE DISPLAY LOGIC (MODIFIED)
+            let o2RateDisplay = "";
             
-            document.getElementById('o2Value').className = "value " + o2Class;
-            document.getElementById('o2Gauge').style.backgroundColor = o2Color;
-            
+            if (o2DynamicInterval) {
+                const engineFixed = shipData.engine.status === "ONLINE / STANDBY";
+                const hullFixed = shipData.hull.status === "NOMINAL (SEALED)";
+
+                if (engineFixed && hullFixed) {
+                    o2RateDisplay = ` `;
+                } else if (engineFixed || hullFixed) {
+                    o2RateDisplay = ` `;
+                } else {
+                    o2RateDisplay = ` `;
+                }
+            } else if (shipData.o2.level === 100.0 && o2RecoveryStarted) {
+                o2RateDisplay = ` (STABLE)`;
+            } else if (shipData.o2.level <= 0) {
+                o2RateDisplay = ` (ZERO)`;
+            }
+
+            o2ValueElem.textContent = o2Level.toFixed(2) + o2RateDisplay;
+            o2ValueElem.className = "value " + gaugeClass;
+            o2Gauge.style.backgroundColor = (gaugeClass === 'critical' ? '#ff0000' : (gaugeClass === 'warning' ? '#ffff00' : '#00ffaa'));
+
             document.getElementById('time').textContent = new Date().toLocaleTimeString();
         }
 
-        // --- GAME LOGIC FUNCTIONS (Unchanged) ---
-        function startO2Recovery() {
-            if (o2RecoveryStarted) return;
-            o2RecoveryStarted = true;
-            
-            // Stop depletion immediately
-            if (o2DepletionInterval) {
-                clearInterval(o2DepletionInterval);
-                appendToLog("\n[LIFE SUPPORT] Depletion sequence aborted. Engine Power Redirected to O2 Generator.");
-            }
-            
-            appendToLog("\n[LIFE SUPPORT] Auxiliary O2 Generator Online. Initiating refill sequence (1.00% per 10 seconds).");
+        // --- DYNAMIC O2 LOGIC (REPLACEMENT) ---
 
-            // Increase O2 by 1.00% every 10000 milliseconds (10 seconds)
-            o2RecoveryInterval = setInterval(() => {
-                if (shipData.o2.level < 100) {
-                    // Increase by 1%
-                    shipData.o2.level = Math.min(100.0, shipData.o2.level + 1.0);
-                    updateDashboard(); 
+        function stopO2Logic() {
+            if (o2DynamicInterval) {
+                clearInterval(o2DynamicInterval);
+                o2DynamicInterval = null;
+            }
+        }
+
+        function startO2LogicLoop() {
+            if (o2DynamicInterval) { return; } 
+
+            appendToLog("\n[LIFE SUPPORT] Primary O2 System Active. Initiating dynamic status check.");
+
+            o2DynamicInterval = setInterval(() => {
+                const engineFixed = shipData.engine.status === "ONLINE / STANDBY";
+                // Note: using "NOMINAL (SEALED)" as the successful hull status
+                const hullFixed = shipData.hull.status === "NOMINAL (SEALED)"; 
+                
+                let currentRate = 0;
+                let wasRecovering = o2RecoveryStarted;
+                o2RecoveryStarted = false; 
+
+                if (engineFixed && hullFixed) {
+                    // RECOVERY PHASE: Both Fixed (0.05%/s increase)
+                    currentRate = O2_RECOVERY_RATE;
+                    o2RecoveryStarted = true;
                     
-                    if (shipData.o2.level >= 100.0) {
-                        clearInterval(o2RecoveryInterval);
-                        appendToLog("\n[LIFE SUPPORT] OXYGEN LEVEL 100.00%. Reservoir fully pressurized. System Nominal.");
-                        shipData.o2.level = 100.00; 
-                        updateDashboard();
+                    if (!wasRecovering) {
+                        appendToLog("\n[STATUS] Life Support System: Recovery protocol initiated.");
+                    }
+
+                } else if (engineFixed || hullFixed) {
+                    // WARNING/SLOW DECAY PHASE: One Fixed (0.02%/s decrease)
+                    currentRate = -O2_DECAY_RATE_WARNING; 
+                } else {
+                    // CRITICAL DECAY PHASE: Both Down (0.04%/s decrease)
+                    currentRate = -O2_DECAY_RATE_CRITICAL;
+                }
+                
+                // Apply O2 change
+                shipData.o2.level += currentRate;
+                
+                // Clamp values and check for end state
+                if (shipData.o2.level <= 0) {
+                    shipData.o2.level = 0;
+                    stopO2Logic(); 
+                    appendToLog("\n[ALERT] O2 LEVELS AT ZERO. LIFE SUPPORT FAILURE. INITIATING EMERGENCY SHUTDOWN.");
+                    clearInterval(dashboardUpdateInterval); // Stop game loop
+                } else if (shipData.o2.level >= 100.0) {
+                    shipData.o2.level = 100.0;
+                    if (o2RecoveryStarted) { 
+                        stopO2Logic();
+                        appendToLog("\n[NOMINAL] O2 LEVELS RESTORED TO 100%. LIFE SUPPORT STABLE.");
                     }
                 }
-            }, 10000); 
+
+                if (shipData.o2.level <= 10 && shipData.o2.level > 0.01 && !shipData.o2.criticalAlert) {
+                    appendToLog("\n>>> CRITICAL WARNING: OXYGEN LEVEL BELOW 10%. LIFE SUPPORT FAILURE IMMINENT. <<<");
+                    shipData.o2.criticalAlert = true;
+                } else if (shipData.o2.level > 10) {
+                    shipData.o2.criticalAlert = false;
+                }
+
+                updateDashboard(); 
+                
+            }, 1000); 
         }
+
+        // --- GAME LOGIC FUNCTIONS (Removed old O2 functions) ---
+        // startO2Recovery() and startO2Depletion() removed here.
 
         function displaySectorScan() {
             const scanOutput = document.getElementById('navScanOutput');
@@ -997,31 +1061,6 @@
                 listItem.textContent = `ID ${id.padStart(2, '0')}: ${profile.Role}`;
                 crewListElement.appendChild(listItem);
             }
-        }
-
-        function startO2Depletion() {
-            if (o2DepletionInterval) clearInterval(o2DepletionInterval);
-            
-            o2DepletionInterval = setInterval(() => {
-                // Only deplete if recovery has not started
-                if (!o2RecoveryStarted && shipData.o2.level > 0) {
-                    shipData.o2.level = Math.max(0, shipData.o2.level - O2_DECAY_RATE);
-                    updateDashboard(); 
-
-                    if (shipData.o2.level <= 10 && shipData.o2.level > 0.01) {
-                         if (!shipData.o2.criticalAlert) {
-                            appendToLog("\n>>> CRITICAL WARNING: OXYGEN LEVEL BELOW 10%. LIFE SUPPORT FAILURE IMMINENT. <<<");
-                            shipData.o2.criticalAlert = true;
-                         }
-                    } else if (shipData.o2.level <= 0.01) {
-                        appendToLog("\n!!! LIFE SUPPORT FAILURE !!! All systems shutting down. Game Over.");
-                        clearInterval(o2DepletionInterval); 
-                        clearInterval(dashboardUpdateInterval);
-                    }
-                }
-            }, 1000); 
-            
-            appendToLog(`\n[LIFE SUPPORT] Primary O2 reservoir ruptured. O2 depletion initiated (${shipData.o2.level.toFixed(2)}% remaining).`);
         }
         
         function sectorLogicGame() {
@@ -1146,7 +1185,7 @@
             const hullInputCode = document.getElementById('hullCodeInput').value.toUpperCase().trim();
             
             let engineFixed = shipData.engine.status === "ONLINE / STANDBY";
-            let hullFixed = shipData.hull.status === "SEALED / STABLE";
+            let hullFixed = shipData.hull.status === "NOMINAL (SEALED)"; // Check based on new status text
             let anyAction = false;
             
             if (!engineFixed && engineInputCode === ENGINE_FIX_CODE) {
@@ -1174,10 +1213,10 @@
             }
         }
          
-        // --- Initialization and Loading Screen Logic (Unchanged) ---
+        // --- Initialization and Loading Screen Logic (Modified) ---
 
         function initializeDashboard() {
-            // Wait 10 seconds, then hide the loading screen and show the dashboard
+            // Wait 5 seconds, then hide the loading screen and show the dashboard
             setTimeout(() => {
                 document.getElementById('loadingScreen').style.display = 'none';
                 
@@ -1187,11 +1226,12 @@
                 displayCrewList(); 
                 displaySectorScan(); 
                 updateDashboard();
-                // O2 depletion starts upon boot
-                startO2Depletion(); 
+                // START MODIFICATION: O2 dynamic loop starts on boot
+                startO2LogicLoop(); 
+                // END MODIFICATION
                 dashboardUpdateInterval = setInterval(updateDashboard, 1000); 
 
-            }, 10000); // 10000 milliseconds = 10 seconds
+            }, 5000); // 10000 milliseconds = 10 seconds
         }
 
         window.onload = initializeDashboard;
