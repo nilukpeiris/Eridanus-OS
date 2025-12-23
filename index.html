@@ -942,7 +942,7 @@
         function startO2LogicLoop() {
             if (o2DynamicInterval) { return; } 
 
-            appendToLog("\n[LIFE SUPPORT] Primary O2 System Active. Initiating dynamic status check.");
+            appendToLog("\n[LIFE SUPPORT] Primary O2 System Active but losing containment. Approximate depletion in 30 mins. Check Engines and Hull..");
 
             o2DynamicInterval = setInterval(() => {
                 const engineFixed = shipData.engine.status === "ONLINE / STANDBY";
