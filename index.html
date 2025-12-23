@@ -8,7 +8,7 @@
     <style>
         body {
             /* Main dashboard background color for the entire page */
-            background-color: #0d1117;
+            background-color: #0d1117; 
             color: #00ffaa; 
             font-family: 'Space Mono', monospace;
             padding: 0; 
@@ -17,6 +17,7 @@
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700;800&display=swap');
+        
         /* --- LOADING SCREEN STYLES (Retained) --- */
         #loadingScreen {
             position: fixed;
@@ -100,7 +101,7 @@
         /* --- DASHBOARD STYLES (3D AESTHETIC) --- */
         
         #dashboardContainer {
-            padding: 25px;
+            padding: 25px; 
             opacity: 0; 
             transition: opacity 0.5s;
             background-color: #0d1117; 
@@ -121,8 +122,7 @@
             box-shadow: 
                 0 0 10px rgba(0, 255, 170, 0.5), 
                 0 0 40px rgba(0, 0, 0, 0.8), 
-                inset 0 0 15px rgba(0, 
-                0, 0, 0.5); 
+                inset 0 0 15px rgba(0, 0, 0, 0.5); 
             
             background-color: #111a24; 
             padding: 20px;
@@ -202,11 +202,11 @@
             margin-bottom: 15px;
             width: 48%; 
             box-sizing: border-box;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 5px rgba(0, 255, 170, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 5px rgba(0, 255, 170, 0.3); 
         }
 
         .control-panel {
-            min-width: 280px;
+            min-width: 280px; 
             height: auto; 
             overflow: visible; 
 
@@ -214,7 +214,7 @@
             padding: 15px;
             border: 1px solid #00ffaa;
             background-color: #1a232e;
-            box-sizing: border-box;
+            box-sizing: border-box; 
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 255, 170, 0.4);
         }
 
@@ -223,7 +223,7 @@
         }
         
         #personnelPanel, #engineeringPanel {
-            width: calc(50% - 5px);
+            width: calc(50% - 5px); 
             min-height: 250px; 
         }
         
@@ -258,18 +258,16 @@
             font-family: 'Space Mono', monospace;
             cursor: pointer;
             transition: background-color 0.1s, box-shadow 0.1s;
-            margin-right: 5px;
+            margin-right: 5px; 
             margin-bottom: 5px;
             font-size: 0.8em; 
             /* Button 3D look: outer glow and subtle inner recess */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(0, 0, 0, 0.2); 
         }
         /* Depressed button effect on hover/active */
         .control-panel button:hover {
-            background-color: #00cc88;
-            /* Slightly darker on hover */
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 0 10px #00ffaa;
-            /* Looks pressed in */
+            background-color: #00cc88; /* Slightly darker on hover */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 0 10px #00ffaa; /* Looks pressed in */
         }
         .control-panel button:active {
             transform: translateY(1px);
@@ -283,13 +281,13 @@
             width: 90%; 
             box-sizing: border-box;
             margin-right: 5px;
-            padding: 5px;
+            padding: 5px; 
             /* Input 3D look: recessed */
             box-shadow: inset 0 0 10px rgba(0, 255, 170, 0.3), 0 0 5px rgba(0, 255, 170, 0.2);
         }
         
         .nav-input-group {
-            display: block;
+            display: block; 
             margin-bottom: 5px;
         }
         .nav-input-group label {
@@ -299,7 +297,7 @@
             margin-right: 5px;
         }
         .nav-input-group input {
-            width: 55%;
+            width: 55%; 
             display: inline-block;
             box-sizing: border-box;
             padding: 3px; 
@@ -311,7 +309,7 @@
             padding: 5px; 
             margin-bottom: 5px; 
             font-size: 0.75em; 
-            white-space: pre;
+            white-space: pre; 
             /* Recessed terminal look */
             box-shadow: inset 0 0 10px #00ffaa33;
         }
@@ -339,7 +337,7 @@
             font-size: 0.9em;
         }
         #crewList li {
-            width: 48%;
+            width: 48%; 
             margin-bottom: 5px;
             padding-right: 10px;
             box-sizing: border-box;
@@ -359,20 +357,14 @@
         }
         
         /* Status Classes */
-        .critical { color: #ff0000;
-            font-weight: bold; animation: pulse-crit 1s infinite alternate; }
-        .nominal { color: #00ffaa;
-        }
-        .warning { color: #ffff00;
-        }
-        .offline { color: #888888;
-        }
+        .critical { color: #ff0000; font-weight: bold; animation: pulse-crit 1s infinite alternate; }
+        .nominal { color: #00ffaa; }
+        .warning { color: #ffff00; }
+        .offline { color: #888888; }
         
         @keyframes pulse-crit {
-            from { text-shadow: 0 0 5px #ff0000;
-            }
-            to { text-shadow: 0 0 15px #ff0000;
-            }
+            from { text-shadow: 0 0 5px #ff0000; }
+            to { text-shadow: 0 0 15px #ff0000; }
         }
 
         /* Gauge Styling */
@@ -390,21 +382,6 @@
             /* Raised gauge fill */
             box-shadow: 0 0 5px rgba(0, 255, 170, 0.5);
         }
-
-        /* --- MOBILE VIEW OPTIMIZATION (Hiding non-essential panels) --- */
-        @media (max-width: 768px) {
-            /* Hide the large, complex panels not needed for mobile */
-            #navCorePanel, 
-            #engineeringPanel {
-                display: none;
-            }
-
-            /* Make the remaining control panel take up the full width */
-            #personnelPanel {
-                width: 100%;
-                min-height: auto; /* Allow height to shrink on mobile */
-            }
-        }
     </style>
 </head>
 <body class="container">
@@ -415,149 +392,124 @@
                 
                 <polygon
                     transform="rotate(45 100 100)" 
-      
                     stroke-width="1"
                     stroke="#00ffaa"
                     fill="none"
                     points="70,70 148,50 130,130 50,150"
                     id="bounce"
-   
                 ></polygon>
                 <polygon
                     transform="rotate(45 100 100)" 
                     stroke-width="1"
                     stroke="#00ffaa"
-        
                     fill="none"
                     points="70,70 148,50 130,130 50,150"
                     id="bounce2"
                 ></polygon>
                 
-             
                 <polygon
                     transform="rotate(45 100 100)"
                     stroke-width="2"
                     stroke=""
                     fill="#414750"
-               
                     points="70,70 150,50 130,130 50,150"
                 ></polygon>
                 <polygon
                     stroke-width="2"
                     stroke=""
-                    
                     fill="url(#gradiente)"
                     points="100,70 150,100 100,130 50,100"
                 ></polygon>
                 <defs>
                     <linearGradient y2="100%" x2="10%" y1="0%" x1="0%" id="gradiente">
-                    
                         <stop style="stop-color: #1e2026;stop-opacity:1" offset="20%"></stop>
                         <stop style="stop-color:#414750;stop-opacity:1" offset="60%"></stop>
                     </linearGradient>
                 </defs>
                 <polygon
-               
                     transform="translate(20, 31)"
                     stroke-width="2"
                     stroke=""
                     fill="#00cc88"
                     points="80,50 80,75 80,99 40,75"
-           
-                    ></polygon>
+                ></polygon>
                 <polygon
                     transform="translate(20, 31)"
                     stroke-width="2"
                     stroke=""
-                  
                     fill="url(#gradiente2)"
                     points="40,-40 80,-40 80,99 40,75"
                 ></polygon>
                 <defs>
                     <linearGradient y2="100%" x2="0%" y1="-17%" x1="10%" id="gradiente2">
-                  
                         <stop style="stop-color: #00ffaa00;stop-opacity:1" offset="20%"></stop>
                         <stop
                             style="stop-color:#00ffaa54;stop-opacity:1"
                             offset="100%"
-           
                             id="animatedStop"
                         ></stop>
                     </linearGradient>
                 </defs>
                 <polygon
-       
                     transform="rotate(180 100 100) translate(20, 20)"
                     stroke-width="2"
                     stroke=""
                     fill="#00ffaa"
-                    points="80,50 80,75 80,99 
-                    40,75"
+                    points="80,50 80,75 80,99 40,75"
                 ></polygon>
                 <polygon
                     transform="rotate(0 100 100) translate(60, 20)"
                     stroke-width="2"
                     stroke=""
-    
                     fill="url(#gradiente3)"
                     points="40,-40 80,-40 80,85 40,110.2"
                 ></polygon>
                 <defs>
                     <linearGradient y2="100%" x2="10%" y1="0%" x1="0%" id="gradiente3">
-    
                         <stop style="stop-color: #00ffaa00;stop-opacity:1" offset="20%"></stop>
                         <stop
                             style="stop-color:#00ffaa54;stop-opacity:1"
-                         
                             offset="100%"
                             id="animatedStop"
                         ></stop>
                     </linearGradient>
                 </defs>
-         
                 <polygon
                     stroke-width="2"
                     stroke=""
                     fill="#292d34"
                     points="29.5,99.8 100,142 100,172 29.5,130"
-          
-                    ></polygon>
+                ></polygon>
                 <polygon
                     transform="translate(50, 92)"
                     stroke-width="2"
                     stroke=""
-                 
                     fill="#1f2127"
                     points="50,50 120.5,8 120.5,35 50,80"
                 ></polygon>
                 
                 <polygon
                     transform="rotate(45 100 100) translate(80, 95)"
-  
                     stroke-width="2"
                     stroke=""
                     fill="#00ffaa"
                     points="5,0 5,5 0,5 0,0"
-                   
                     id="particles"
                 ></polygon>
                 <polygon
                     transform="rotate(45 100 100) translate(80, 55)"
                     stroke-width="2"
                     stroke=""
-   
                     fill="#00cc88"
                     points="6,0 6,6 0,6 0,0"
                     id="particles"
                 ></polygon>
                 <polygon
-        
                     transform="rotate(45 100 100) translate(70, 80)"
                     stroke-width="2"
                     stroke=""
                     fill="#00ffaa"
                     points="2,0 2,2 0,2 0,0"
- 
                     id="particles"
                 ></polygon>
             </g>
@@ -567,7 +519,6 @@
     
     <div id="dashboardContainer">
         <div class="dashboard">
-            
             <div class="header">
                 <h1>ERIDANUS PILGRIM</h1>
                 <p>SYSTEM STATUS MONITOR // <span id="time"></span></p>
@@ -575,34 +526,28 @@
             
             <div id="systemStatus">
                 <h2><span style="color: #00ffaa;">[STATUS]</span> CRITICAL SYSTEMS MONITOR</h2>
-   
                 <div class="section">
                     <div class="status-box">
                         <h3>HULL INTEGRITY (FORE SECTION)</h3>
                         <p class="value" id="hullStatus"></p>
-            
                     </div>
                     
                     <div class="status-box">
                         <h3>MAIN DRIVE ARRAY</h3>
-                        <p 
-                        class="value" id="engineStatus"></p>
+                        <p class="value" id="engineStatus"></p>
                     </div>
                     
                     <div class="status-box">
                         <h3>LIFE SUPPORT: O2 LEVEL</h3>
-           
                         <p><span class="value" id="o2Value"></span>%</p>
                         <div class="gauge-bar">
                             <div id="o2Gauge" class="gauge-fill"></div>
                         </div>
-      
                     </div>
 
                     <div class="status-box">
                         <h3>EXTERNAL COMMUNICATIONS</h3>
                         <p class="value" id="commsStatus"></p>
-              
                     </div>
 
                     <div class="status-box">
@@ -610,81 +555,67 @@
                         <p class="value" id="powerStatus"></p>
                     </div>
 
- 
                     <div class="status-box">
                         <h3>CURRENT ASTROGATION COORDS</h3>
                         <p class="value" id="coordStatus"></p>
                     </div>
-        
                 </div>
             </div>
             
             <div id="controlMenu">
                 <h2><span style="color: #ffff00;">[MENU]</span> ACCESS PANELS & CONTROLS</h2>
                 
-                <div 
-                class="control-panel" id="navCorePanel">
+                <div class="control-panel" id="navCorePanel">
                     <h3>NAV CORE & ASTROGATION</h3>
                     
                     <p><strong>INITIAL NAVIGATIONAL SCAN:</strong></p>
                     <div id="navScanOutput">
-             
-                    </div>
+                        </div>
                     
                     <p><strong>SYSTEM DEFRAG CLUES:</strong></p>
                     <ul id="navClues">
                         </ul>
 
-  
                     <div id="navLogicPanel">
                         <p><strong>CONFIG RESET (2, 6, 10):</strong></p>
                         <div class="nav-input-group">
-                            
                             <label for="sector2">Sect 2:</label> <input type="text" id="sector2">
                         </div>
                         <div class="nav-input-group">
                             <label for="sector6">Sect 6:</label> <input type="text" id="sector6">
-             
                         </div>
                         <div class="nav-input-group">
                             <label for="sector10">Sect 10:</label> <input type="text" id="sector10">
                         </div>
-       
                         <button onclick="sectorLogicGame()">SUBMIT CONFIG</button>
                         <button onclick="clearLog()">CLEAR LOG</button>
                     </div>
 
                     <div id="navFinalPanel" style="display: none;">
-            
                         <p><strong>DESTINATION VECTOR:</strong></p>
                         <input type="text" id="coordInput" placeholder="Enter 4-digit coordinate">
                         <button onclick="accessNav(document.getElementById('coordInput').value)">JUMP INITIATE</button>
                     </div>
-            
                 </div>
 
                 <div class="control-panel" id="personnelPanel">
                     <h3>PERSONNEL FILE ACCESS (CREW)</h3>
                     <p><strong>CURRENT MANIFEST:</strong></p>
                     <ul id="crewList"></ul> 
-            
-         
+                    
                     <input type="text" id="crewIdInput" placeholder="Enter Crew ID (1-12)"> 
                     <button onclick="getPersonnelFile(document.getElementById('crewIdInput').value)">
                         ACCESS CREW FILE
-                  
                     </button>
                     <button onclick="clearLog()">CLEAR LOG</button>
                 </div>
                 
                 <div class="control-panel" id="engineeringPanel">
                     <h3>MAIN ENGINEERING ACCESS</h3>
-    
                     <p><strong>ENGINE SYSTEM REPAIR:</strong></p>
                     <input type="text" id="engineCodeInput" placeholder="Engine Repair Code">
                     
                     <p><strong>HULL INTEGRITY REPAIR:</strong></p>
-               
                     <input type="text" id="hullCodeInput" placeholder="Hull Repair Code">
                     
                     <button onclick="applyEngineeringFix()">APPLY REPAIR CODES</button>
@@ -692,7 +623,6 @@
             </div>
 
             <div id="terminalLog" class="terminal-output">
-     
                 // SYSTEM LOG: Ready for command...
             </div>
         </div>
@@ -707,56 +637,45 @@
         const HULL_FIX_CODE = "FIXHULLNOW";       
         const ERIDANI_COORDS = "4921";
         const EARTH_COORDS = "5067";
+
         // MODIFIED: New depletion rate for 75% drop in 3600 seconds (1 hour)
-        const O2_DECAY_RATE = 0.020833;
+        const O2_DECAY_RATE = 0.020833; 
+        
         let shipData = {
             hull: { status: "SEAL BREACH - FORE SECTION EXTERNAL HULL", level: 50 },
             engine: { status: "CRITICAL FAILURE" },
             o2: { level: 75.0 }, 
             comms: { status: "OFFLINE" },
             power: { status: "STABLE (RESERVE)" },
-      
             coords: { status: "NAV DATA CORRUPTED" }
         };
+
         const PLAYER_PROFILES = {
-    	     1: {Role: "Captain", Expertise: "Leadership, Command", Record: "Fleet Captain C. P. Shepard, age 62, began their exemplary career by graduating at the top of their class from the Mars Naval Space Academy with a focus on Advanced Astrogation. Immediately following graduation, Shepard was recruited by the interplanetary conglomerate, ERIDANUS CORE, preferring the path of corporate logistics and deep-space resource acquisition over traditional military service. Shepard’s ascent through the ranks was swift and steady, a testament to their exceptional command presence and unmatched operational efficiency. Their sustained high performance 
-            led to the prestigious command of a Pilgrim-class vessel, a position they have held for 30 consecutive years. This extensive tenure is underscored by an immaculate service record, entirely free of mission failures or disciplinary actions. Shepard embodies the ideal ERIDANUS CORE officer: highly competent, strategically brilliant, and unwaveringly dedicated to the corporation's expansion across the Eridani sector.", Status: "Active"},
+    	     1: {Role: "Captain", Expertise: "Leadership, Command", Record: "Fleet Captain C. P. Shepard, age 62, began their exemplary career by graduating at the top of their class from the Mars Naval Space Academy with a focus on Advanced Astrogation. Immediately following graduation, Shepard was recruited by the interplanetary conglomerate, ERIDANUS CORE, preferring the path of corporate logistics and deep-space resource acquisition over traditional military service. Shepard’s ascent through the ranks was swift and steady, a testament to their exceptional command presence and unmatched operational efficiency. Their sustained high performance led to the prestigious command of a Pilgrim-class vessel, a position they have held for 30 consecutive years. This extensive tenure is underscored by an immaculate service record, entirely free of mission failures or disciplinary actions. Shepard embodies the ideal ERIDANUS CORE officer: highly competent, strategically brilliant, and unwaveringly dedicated to the corporation's expansion across the Eridani sector.", Status: "Active"},
             2: {Role: "Chief Engineer", Expertise: "Engine Systems, Power", Record: "MEDICAL ALERT: Diagnosed with Chronic Hypersleep Syndrome (Private File).", Status: "Active"},
-          
             3: {Role: "Security Chief", Expertise: "Ship Layout, Codes", Record: "HIGH CLEARANCE: Corporate asset designation (Requires HR key).", Status: "Active"},
             4: {Role: "Lead Scientist", Expertise: "Life Support, Eridani Data", Record: "Research Data Criticality: Requires access to Security Chief's core.", Status: "Active"},
             5: {Role: "Pilot/Helmsman", Expertise: "Thrusters, Steering", Record: "Psych Evaluation: Moderate Space Crisis Phobia (Treated/Suppressed).", Status: "Active"},
-            6: {Role: "Medical Officer", Expertise: "Biology, Personnel Records", Record: 
-            "Standard: Excellent service history. Recent research on Synthetic lifeforms.", Status: "Active"},
+            6: {Role: "Medical Officer", Expertise: "Biology, Personnel Records", Record: "Standard: Excellent service history. Recent research on Synthetic lifeforms.", Status: "Active"},
             7: {Role: "Xenolinguist", Expertise: "Communications, Translation", Record: "Unusual Comm Log: Detected a subtle external manipulation vector in early logs.", Status: "Active"},
             8: {Role: "Cybernetics Specialist", Expertise: "Hacking, AI interface", Record: "Internal Investigation Flag: Suspected of covering minor system sabotage (Confidential).", Status: "Active"},
-            9: {Role: "Geologist/Miner", Expertise: "Hull Integrity, Materials", Record: "CRIMINAL RECORD FLAG: Wanted in Sector 
-            3 for unauthorized data extraction.", Status: "Active"},
+            9: {Role: "Geologist/Miner", Expertise: "Hull Integrity, Materials", Record: "CRIMINAL RECORD FLAG: Wanted in Sector 3 for unauthorized data extraction.", Status: "Active"},
             10: {Role: "Janitor/Tech", Expertise: "Maintenance, Fuses", Record: "IDENTITY MASK: Technician Level 5. Disgraced but highly skilled (Use HR key for verification).", "Status": "Active"},
-            11: {Role: "Unassigned", Expertise: "N/A", "Record": "Status Unknown.
-            Cryo-pod 11 life signs flickering.", "Status": "Unknown"},
-            12: {Role: "Unassigned", Expertise: "N/A", "Record": "Status Unknown.
-            Cryo-pod 12 breach alarm triggered.", "Status": "Unknown"}
+            11: {Role: "Unassigned", Expertise: "N/A", "Record": "Status Unknown. Cryo-pod 11 life signs flickering.", "Status": "Unknown"},
+            12: {Role: "Unassigned", Expertise: "N/A", "Record": "Status Unknown. Cryo-pod 12 breach alarm triggered.", "Status": "Unknown"}
         };
         
         const SECTOR_SOLUTION = { 2: "COMET", 6: "GAS CLOUD", 10: "ERIDANI B" };
         const POSSIBLE_CONTENTS = [ "EARTH", "COMET x2", "GAS CLOUD x2", "ASTEROID x4", "EMPTY SPACE x2", "ERIDANI B" ];
-        const SECTOR_SCAN_DATA = { 1: "CORRUPT", 2: "CORRUPT", 3: "NOT EARTH", 4: "NOT EARTH", 5: "CORRUPT", 6: "CORRUPT", 7: "NOT EARTH", 8: "NOT GAS CLOUD", 
-        9: "CORRUPT", 10: "NOT ASTEROID", 11: "NOT GAS CLOUD", 12: "NOT GAS CLOUD" };
+        const SECTOR_SCAN_DATA = { 1: "CORRUPT", 2: "CORRUPT", 3: "NOT EARTH", 4: "NOT EARTH", 5: "CORRUPT", 6: "CORRUPT", 7: "NOT EARTH", 8: "NOT GAS CLOUD", 9: "CORRUPT", 10: "NOT ASTEROID", 11: "NOT GAS CLOUD", 12: "NOT GAS CLOUD" };
         const SECTOR_CLUES = [
-            "DEFRAG 10%: SECTOR 11 COMET.
-            EARTH is within 3 sectors of a COMET",
-            "DEFRAG 20%: SECTOR 3 ASTEROID.
-            EARTH is adjacent to an ASTEROID. ASTEROIDS are adjacent to at least ONE other ASTEROID",
-            "DEFRAG 30%: SECTOR 12 ASTEROID.
-            All ASTEROIDS are in a band of 6 sectors or less.",
-            "DEFRAG 40%: SECTOR 9 GAS CLOUD.
-            No GAS CLOUD is directly opposite of EARTH. GAS CLOUDS are adjacent to at least ONE EMPTY SPACE ",
-            "DEFRAG 50%: SECTOR 8 EMPTY SPACE.
-            No ASTEROID is adjacent to a GAS CLOUD.",
+            "DEFRAG 10%: SECTOR 11 COMET. EARTH is within 3 sectors of a COMET",
+            "DEFRAG 20%: SECTOR 3 ASTEROID. EARTH is adjacent to an ASTEROID. ASTEROIDS are adjacent to at least ONE other ASTEROID",
+            "DEFRAG 30%: SECTOR 12 ASTEROID. All ASTEROIDS are in a band of 6 sectors or less.",
+            "DEFRAG 40%: SECTOR 9 GAS CLOUD. No GAS CLOUD is directly opposite of EARTH. GAS CLOUDS are adjacent to at least ONE EMPTY SPACE ",
+            "DEFRAG 50%: SECTOR 8 EMPTY SPACE. No ASTEROID is adjacent to a GAS CLOUD.",
             "DEFRAG 60%: All GAS CLOUDS are in a band of 5 sectors or less",
-            "DEFRAG 70%: ERIDANI B is within 2 sectors of an ASTEROID.
-            ERIDANI B is NOT adjacent to EARTH",
+            "DEFRAG 70%: ERIDANI B is within 2 sectors of an ASTEROID. ERIDANI B is NOT adjacent to EARTH",
         ];
         let currentClueIndex = -1; 
         let navUnlocked = false;
@@ -766,7 +685,6 @@
 
         // --- CORE LOGIC FUNCTIONS (Unchanged) ---
         const log = document.getElementById('terminalLog');
-      
         
         function appendToLog(text) {
             log.innerHTML += text + '\n';
@@ -777,14 +695,12 @@
              log.innerHTML = '// SYSTEM LOG: Log Cleared.\n';
         }
         
-    
         function writeToLog(text) {
             const logLines = log.innerHTML.split('\n');
             if (logLines.length > 0 && logLines[logLines.length - 1].endsWith('...')) {
                 logLines.pop(); 
                 log.innerHTML = logLines.join('\n');
             }
-            
             log.innerHTML += text;
             log.scrollTop = log.scrollHeight;
         }
@@ -798,12 +714,12 @@
                 writeToLog(char);
                 await sleep(delay * 1000); 
             }
-            appendToLog('');
+            appendToLog(''); 
         }
         
         // --- ANIMATION FUNCTIONS (Unchanged) ---
         async function engineStartupAnimation() {
-            clearLog();
+            clearLog(); 
             document.querySelectorAll('#engineeringPanel button').forEach(btn => btn.disabled = true);
             document.querySelectorAll('#engineeringPanel input').forEach(input => input.disabled = true);
             
@@ -821,12 +737,11 @@
                 const percentage = i * 5 + 2;
                 const frame = framesInject[i % 4];
                 const lastLineIndex = log.innerHTML.lastIndexOf('\n');
-                const prevLog = lastLineIndex > 0 ?
-                log.innerHTML.substring(0, lastLineIndex) : '';
+                const prevLog = lastLineIndex > 0 ? log.innerHTML.substring(0, lastLineIndex) : '';
                 
                 log.innerHTML = prevLog + `\n[${frame}] Injecting Flux Capacitor... ${percentage}%`;
                 log.scrollTop = log.scrollHeight;
-                await sleep(100);
+                await sleep(100); 
             }
             
             const lastLineIndex = log.innerHTML.lastIndexOf('\n');
@@ -836,10 +751,12 @@
             await sleep(500);
             await typeText("\n[STATUS: 0%] RE-ALIGNING DRIVE CORES (Critical Misalignment)....", 0.01);
             await sleep(500);
+            
             for (let i = 1; i <= 3; i++) {
                 const dots = ".".repeat(i);
                 const lastLineIndex = log.innerHTML.lastIndexOf('\n');
                 const prevLog = lastLineIndex > 0 ? log.innerHTML.substring(0, lastLineIndex) : '';
+                
                 log.innerHTML = prevLog + `\n[ALIGNMENT] Core ${i}: ${dots.padEnd(3)} Stabilizing`;
                 log.scrollTop = log.scrollHeight;
                 await sleep(500);
@@ -864,9 +781,11 @@
             appendToLog(hashSeparator);
             
             await sleep(1500);
+            
             shipData.engine.status = "ONLINE / STANDBY";
             // Start O2 recovery after engine fix is confirmed
-            startO2Recovery();
+            startO2Recovery(); 
+            
             document.getElementById('engineCodeInput').disabled = true;
             document.querySelectorAll('#engineeringPanel button').forEach(btn => btn.disabled = false);
             document.querySelectorAll('#engineeringPanel input').forEach(input => input.disabled = false);
@@ -875,7 +794,7 @@
         }
 
         async function hullRepairAnimation() {
-            clearLog();
+            clearLog(); 
             document.querySelectorAll('#engineeringPanel button').forEach(btn => btn.disabled = true);
             document.querySelectorAll('#engineeringPanel input').forEach(input => input.disabled = true);
 
@@ -883,6 +802,7 @@
             appendToLog(separator);
             appendToLog("        HULL INTEGRITY PROTOCOL: INITIATED...");
             appendToLog(separator);
+
             await typeText("\n[STATUS: 0%] DIAGNOSING PRESSURE LOSS IN SECTOR 7...", 0.03);
             await sleep(500);
             await typeText("ISOLATING BREACH AREA...", 0.05);
@@ -895,14 +815,17 @@
             await sleep(500);
             
             await typeText("APPLYING EMERGENCY METALLIC PATCH...", 0.05);
+
             let progress_bar = "[" + " ".repeat(30) + "]";
             for (let i = 0; i < 30; i++) {
                 progress_bar = progress_bar.substring(0, i + 1) + "#" + progress_bar.substring(i + 2);
+                
                 const lastLineIndex = log.innerHTML.lastIndexOf('\n');
                 const prevLog = lastLineIndex > 0 ? log.innerHTML.substring(0, lastLineIndex) : '';
+                
                 log.innerHTML = prevLog + `\n[STATUS: 50% - 90%] Hardening Patch Material: ${progress_bar}`;
                 log.scrollTop = log.scrollHeight;
-                await sleep(80);
+                await sleep(80); 
             }
 
             appendToLog("\r[STATUS: 90%] PATCH WELD COMPLETE.                                     ");
@@ -927,6 +850,7 @@
             appendToLog(starSeparator);
             
             await sleep(1500);
+            
             shipData.hull.status = "SEALED / STABLE";
             document.getElementById('hullCodeInput').disabled = true;
             document.querySelectorAll('#engineeringPanel button').forEach(btn => btn.disabled = false);
@@ -938,18 +862,15 @@
         // --- UI STATUS UPDATE FUNCTIONS (Unchanged) ---
         function getStatusClass(statusText) {
              statusText = statusText.toUpperCase();
-             if (statusText.includes("CRITICAL") || statusText.includes("FAILURE") || statusText.includes("CORRUPTED") || statusText.includes("BREACH")) { return "critical";
-             } 
-             else if (statusText.includes("STABLE") || statusText.includes("NOMINAL") || statusText.includes("ONLINE") || statusText.includes("SEALED")) { return "nominal";
-             } 
-             else if (statusText.includes("RESERVE") || statusText.includes("WARNING")) { return "warning";
-             } 
-             else if (statusText.includes("OFFLINE") || statusText.includes("UNKNOWN")) { return "offline";
-             }
+             if (statusText.includes("CRITICAL") || statusText.includes("FAILURE") || statusText.includes("CORRUPTED") || statusText.includes("BREACH")) { return "critical"; } 
+             else if (statusText.includes("STABLE") || statusText.includes("NOMINAL") || statusText.includes("ONLINE") || statusText.includes("SEALED")) { return "nominal"; } 
+             else if (statusText.includes("RESERVE") || statusText.includes("WARNING")) { return "warning"; } 
+             else if (statusText.includes("OFFLINE") || statusText.includes("UNKNOWN")) { return "offline"; }
              return "nominal";
         }
 
         let dashboardUpdateInterval;
+
         function updateDashboard() { 
             document.getElementById('hullStatus').textContent = shipData.hull.status;
             document.getElementById('hullStatus').className = "value " + getStatusClass(shipData.hull.status);
@@ -970,14 +891,14 @@
             document.getElementById('o2Value').textContent = o2Display;
             document.getElementById('o2Gauge').style.width = o2GaugeValue + '%';
             
-            let o2Color = '#00ffaa';
+            let o2Color = '#00ffaa'; 
             let o2Class = "nominal";
             // Use the floating-point value for critical/warning checks
             if (o2Level <= 10) { 
-                o2Color = '#ff0000';
+                o2Color = '#ff0000'; 
                 o2Class = "critical";
             } else if (o2Level < 35) { 
-                o2Color = '#ffff00';
+                o2Color = '#ffff00'; 
                 o2Class = "warning";
             }
             
@@ -999,30 +920,29 @@
             }
             
             appendToLog("\n[LIFE SUPPORT] Auxiliary O2 Generator Online. Initiating refill sequence (1.00% per 10 seconds).");
+
             // Increase O2 by 1.00% every 10000 milliseconds (10 seconds)
             o2RecoveryInterval = setInterval(() => {
                 if (shipData.o2.level < 100) {
                     // Increase by 1%
                     shipData.o2.level = Math.min(100.0, shipData.o2.level + 1.0);
-       
                     updateDashboard(); 
                     
                     if (shipData.o2.level >= 100.0) {
                         clearInterval(o2RecoveryInterval);
-                  
                         appendToLog("\n[LIFE SUPPORT] OXYGEN LEVEL 100.00%. Reservoir fully pressurized. System Nominal.");
                         shipData.o2.level = 100.00; 
                         updateDashboard();
                     }
-              
                 }
-            }, 10000);
+            }, 10000); 
         }
 
         function displaySectorScan() {
             const scanOutput = document.getElementById('navScanOutput');
             let output = "--- SECTOR SCAN DATA (1-12) ---\n";
             let keys = Object.keys(SECTOR_SCAN_DATA);
+            
             for (let i = 0; i < keys.length; i += 4) {
                 let row = "|";
                 for (let j = 0; j < 4; j++) {
@@ -1081,28 +1001,25 @@
 
         function startO2Depletion() {
             if (o2DepletionInterval) clearInterval(o2DepletionInterval);
+            
             o2DepletionInterval = setInterval(() => {
                 // Only deplete if recovery has not started
                 if (!o2RecoveryStarted && shipData.o2.level > 0) {
                     shipData.o2.level = Math.max(0, shipData.o2.level - O2_DECAY_RATE);
                     updateDashboard(); 
 
-     
                     if (shipData.o2.level <= 10 && shipData.o2.level > 0.01) {
                          if (!shipData.o2.criticalAlert) {
                             appendToLog("\n>>> CRITICAL WARNING: OXYGEN LEVEL BELOW 10%. LIFE SUPPORT FAILURE IMMINENT. <<<");
-           
                             shipData.o2.criticalAlert = true;
                          }
                     } else if (shipData.o2.level <= 0.01) {
-                        appendToLog("\n!!! LIFE SUPPORT FAILURE !!! All 
-                        systems shutting down. Game Over.");
+                        appendToLog("\n!!! LIFE SUPPORT FAILURE !!! All systems shutting down. Game Over.");
                         clearInterval(o2DepletionInterval); 
                         clearInterval(dashboardUpdateInterval);
                     }
                 }
-           
-                }, 1000); 
+            }, 1000); 
             
             appendToLog(`\n[LIFE SUPPORT] Primary O2 reservoir ruptured. O2 depletion initiated (${shipData.o2.level.toFixed(2)}% remaining).`);
         }
@@ -1121,7 +1038,7 @@
 
             if (!guess2 || !guess6 || !guess10) {
                  appendToLog("\n[ERROR] Please fill in all three required sectors.");
-                return;
+                 return;
             }
             
             appendToLog("\n[NAV CORE]: Attempting integrity check...");
@@ -1130,6 +1047,7 @@
             const correct2 = (guess2 === SECTOR_SOLUTION[2]);
             const correct6 = (guess6 === SECTOR_SOLUTION[6]);
             const correct10 = (guess10 === SECTOR_SOLUTION[10]);
+
             if (correct2 && correct6 && correct10) {
                 appendToLog("\n[SUCCESS] CRITICAL SECTORS VERIFIED.");
                 appendToLog("NAV CORE RESET COMPLETE. DESTINATION INPUT ENABLED.");
@@ -1153,7 +1071,7 @@
         function accessNav(coords) {
             if (!navUnlocked) {
                  appendToLog("\n[ERROR] NAV CORE is locked. Complete sector configuration reset first.");
-                return;
+                 return;
             }
 
             if (shipData.engine.status !== "ONLINE / STANDBY") {
@@ -1163,37 +1081,37 @@
             }
 
             const cleanCoords = coords.trim();
+
             if (cleanCoords === ERIDANI_COORDS || cleanCoords === EARTH_COORDS) {
                 appendToLog("\nCALCULATING................");
                 setTimeout(() => {
                     const destination = cleanCoords === ERIDANI_COORDS ? "EPSILON ERIDANI" : "EARTH";
                     appendToLog(`VECTOR CONFIRMED: ${destination}.`);
                     appendToLog("\n***********************************");
-                    appendToLog("      
-                    JUMP SEQUENCE INITIATED      ");
+                    appendToLog("      JUMP SEQUENCE INITIATED      ");
                     appendToLog("      T-minus 60 minutes to JUMP   ");
                     appendToLog("    Please proceed to HIBERNATION  ");
                     appendToLog("***********************************");
-          
                     shipData.coords.status = `TARGET: ${destination}`;
                     updateDashboard();
                     document.getElementById('coordInput').disabled = true;
                 }, 1000);
+
             } else {
                 appendToLog("\n[ERROR] INVALID VECTOR. TRAJECTORY UNSAFE. CHECK PHYSICAL CHARTS.");
             }
         }
         
         function getPersonnelFile(playerIdStr) {
-             const playerId = parseInt(playerIdStr.trim());
+             const playerId = parseInt(playerIdStr.trim()); 
+             
              if (isNaN(playerId) || playerId < 1 || playerId > 12) {
-                 appendToLog(`[ERROR] Invalid Crew ID input. Please enter a number between 1 and 12.`);
-                return;
+                 appendToLog(`[ERROR] Invalid Crew ID input. Please enter a number between 1 and 12.`); 
+                 return;
              }
              
              const profile = PLAYER_PROFILES[playerId];
-             if (!profile) { appendToLog(`[ERROR] Personnel ID ${playerId} not found in database.`); return;
-             }
+             if (!profile) { appendToLog(`[ERROR] Personnel ID ${playerId} not found in database.`); return; }
              
              appendToLog(`\n--- PERSONNEL FILE: ID ${playerId} (${profile.Role}) ---`);
              appendToLog(`Status: ${profile.Status}`);
@@ -1202,19 +1120,18 @@
              let attempt;
              let accessGranted = false;
              let recordText = profile.Record;
+            
              if (playerId === 2) { 
                  appendToLog("[MEDICAL FILE ALERT] File requires Level 4 Medical Clearance (MEDIC KEY).");
                  attempt = prompt("ENTER MEDICAL CODE:").toUpperCase().trim(); 
-                 if (attempt === PASSWORD_MEDIC) { accessGranted = true;
-                 }
+                 if (attempt === PASSWORD_MEDIC) { accessGranted = true; }
              } else if (playerId === 3 || playerId === 9 || playerId === 10) { 
                  appendToLog("[HR FILE ALERT] File requires Level 9 HR Clearance (HR KEY).");
                  attempt = prompt("ENTER HR CODE:").toUpperCase().trim();
-                 if (attempt === PASSWORD_HR) { accessGranted = true;
-                 }
+                 if (attempt === PASSWORD_HR) { accessGranted = true; }
              } else {
                  appendToLog(`[GENERAL RECORD] Record: ${profile.Record}`);
-                return;
+                 return;
              }
 
              if (accessGranted) {
@@ -1251,7 +1168,7 @@
             }
 
             if (engineFixed && hullFixed) { 
-                appendToLog("// SYSTEM LOG: Engines and Hull already repaired. No action taken.");
+                appendToLog("// SYSTEM LOG: Engines and Hull already repaired. No action taken."); 
             } else if (!anyAction) {
                 appendToLog("\n[INFO] Please enter a valid code for the system you wish to repair.");
             }
@@ -1263,13 +1180,11 @@
             // Wait 10 seconds, then hide the loading screen and show the dashboard
             setTimeout(() => {
                 document.getElementById('loadingScreen').style.display = 'none';
- 
                 
                 document.getElementById('dashboardContainer').style.opacity = '1';
                 
                 // Start the game logic only after the loading screen is gone
                 displayCrewList(); 
-       
                 displaySectorScan(); 
                 updateDashboard();
                 // O2 depletion starts upon boot
@@ -1280,6 +1195,7 @@
         }
 
         window.onload = initializeDashboard;
+
     </script>
 </body>
 </html>
