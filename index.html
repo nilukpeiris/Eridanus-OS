@@ -26,6 +26,9 @@
             overflow: hidden; /* DISABLE SCROLLING */
             display: flex;
             flex-direction: column;
+            
+            /* CRT EFFECT SETUP */
+            position: relative; /* Needed for ::before/::after positioning */
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
@@ -131,13 +134,9 @@
             flex-direction: column; 
         }
         
-        #log-container {
-            /* ... (keep other styles) ... */
-        }
-        
         #terminalLog {
              /* Standard top-down text flow */
-             white-space: pre-wrap; /* <-- ADD THIS LINE */
+             white-space: pre-wrap; /* FIX: This makes \n characters respect line breaks */
         }
 
         /* --- BOTTOM NAVIGATION BAR --- */
@@ -244,7 +243,7 @@
         }
 
         /* Ensures the image content inside the bottom card scales correctly to fit the now fixed height */
-        #hull-diagram-container img, #engineStatusImage, #hullStatusImage { /* Added #hullStatusImage */
+        #hull-diagram-container img, #engineStatusImage {
             max-width: 100%;
             max-height: 100%; /* Added max-height to ensure the image scales down if the box is too short */
             height: auto;
@@ -261,9 +260,118 @@
             flex-shrink: 0;
         }
         
+        /* --- ANALOG CRT / SCANLINE EFFECT (FLICKER RESTORED, SWEEP FIXED) --- */
+
+        /* INCREASED FLICKER KEYFRAMES (for general screen flicker) */
+        @keyframes flicker {
+            0% { 
+                opacity: 0.70; 
+                filter: brightness(1.0); 
+                text-shadow: 0 0 1px var(--primary-color);
+            }
+            15% { 
+                opacity: 0.85; 
+            }
+            30% { 
+                opacity: 0.75; 
+                filter: brightness(1.05); 
+            }
+            45% { 
+                opacity: 0.82; 
+            }
+            60% { 
+                opacity: 0.70; 
+                text-shadow: 0 0 1px var(--primary-color);
+            }
+            100% { 
+                opacity: 0.90; 
+                filter: brightness(1.1); 
+                text-shadow: 
+                    0 0 1px var(--primary-color), 
+                    0 0 8px rgba(0, 240, 255, 0.2); 
+            }
+        }
+
+        /* 1. Horizontal Scanlines and Flicker (::before) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998; 
+
+            /* Horizontal Scanline Effect */
+            background: 
+                repeating-linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 0.15),
+                    rgba(0, 0, 0, 0.15) 1px,
+                    transparent 1px,
+                    transparent 2px
+                );
+            
+            /* High Flicker: Retained for the main screen */
+            opacity: 0.75; 
+            animation: flicker 0.1s infinite alternate; 
+        }
+
+        /* 2. Vignette (::after) - No change needed here */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9997; 
+
+            /* Radial gradient creates a dark border/vignette */
+            background: 
+                radial-gradient(
+                    ellipse at center, 
+                    rgba(0, 0, 0, 0) 60%, 
+                    rgba(0, 0, 0, 0.4) 100%
+                );
+        }
+        
+        /* --- HORIZONTAL SCANLINE SWEEP EFFECT (FLICKER REMOVED) --- */
+        /* Keyframes for random flicker removed */
+        /* @keyframes scanlineFlicker ... */
+
+        #vertical-scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999; 
+            
+            background: linear-gradient(to bottom, 
+                transparent, 
+                rgba(0, 240, 255, 0.2) 3px, 
+                transparent 4px
+            );
+            
+            /* Flicker removed, keeping only the smooth sweep */
+            animation: horizontalSweep 12s linear infinite; 
+        }
+
+        /* Keyframes for the line moving top to bottom */
+        @keyframes horizontalSweep { 
+            0% { transform: translateY(-10vh); } /* Start off screen top */
+            100% { transform: translateY(110vh); } /* End off screen bottom */
+        }
+        
     </style>
 </head>
 <body>
+    
+    <div id="vertical-scanline"></div>
 
     <div id="loadingScreen">
         <h1 style="color: var(--primary-color); animation: blink 0.5s infinite;">INITIALIZING SYSTEM...</h1>
@@ -370,15 +478,15 @@
                     
                     <div class="engineering-column">
                         <div class="status-card">
-                            <h3>ENGINE ARRAY REPAIR MECH</h3>
+                            <h3>ENGINE ARRAY REPAIR</h3>
                             <p>Status: <span id="eng-status-display">CRITICAL</span></p>
-                            <p>Input Engine Repair MECH Activation Code:</p>
+                            <p>Input Override Code:</p>
                             <input type="text" id="engineCodeInput" placeholder="ENTER CODE">
                             <button class="action-btn" onclick="applyEngineeringFix()">EXECUTE REPAIR</button>
                         </div>
 
                         <div class="status-card">
-                            <h3>ENGINES STATUS DIAGRAM</h3>
+                            <h3>PLASMA CONDUITS (AUX)</h3>
                             <img id="engineStatusImage" 
                                  src="shipenginesdamaged.png" 
                                  alt="Damaged Engine Schematic" 
@@ -388,15 +496,15 @@
 
                     <div class="engineering-column">
                         <div class="status-card">
-                            <h3>HULL BREACH SEAL MECH</h3>
+                            <h3>HULL BREACH SEAL</h3>
                             <p>Status: <span id="hull-status-display">BREACHED</span></p>
-                            <p>Input Seal MECH Activation Code:</p>
+                            <p>Input Seal Code:</p>
                             <input type="text" id="hullCodeInput" placeholder="ENTER CODE">
                             <button class="action-btn" onclick="applyEngineeringFix()">EXECUTE REPAIR</button>
                         </div>
                         
                         <div class="status-card" id="hull-diagram-container">
-                            <h3>HULL STATUS DIAGRAM</h3>
+                            <h3>FORE SECTION DIAGRAM</h3>
                             <img id="hullStatusImage" src="shipimage1.png" alt="Hull Breach Diagram">
                         </div>
                     </div>
@@ -416,8 +524,8 @@
 
     <script>
         // --- DATA & CONFIGURATION ---
-        const PASSWORD_MEDIC = "HEALTH4";
-        const PASSWORD_HR = "HR99";
+        
+        // --- PASSWORDS & KEYS (Retained for Engineering/Nav) ---
         const ENGINE_FIX_CODE = "FIXENGINESNOW"; 
         const HULL_FIX_CODE = "FIXHULLNOW";       
         const ERIDANI_COORDS = "4921";
@@ -436,20 +544,20 @@
             coords: { status: "NAV DATA CORRUPTED" }
         };
 
-        // FULL CREW DATABASE
+        // FULL CREW DATABASE (UPDATED NAME FOR ID 10)
         const PLAYER_PROFILES = {
-             1: {Role: "Captain", Expertise: "Leadership, Command", Record: "Fleet Captain C. P. Shepard, age 62, began their exemplary career by graduating at the top of their class from the Mars Naval Space Academy with a focus on Advanced Astrogation. Immediately following graduation, Shepard was recruited by the interplanetary conglomerate, ERIDANUS CORE, preferring the path of corporate logistics and deep-space resource acquisition over traditional military service. Shepard’s ascent through the ranks was swift and steady, a testament to their exceptional command presence and unmatched operational efficiency. Their sustained high performance led to the prestigious command of a Pilgrim-class vessel, a position they have held for 30 consecutive years. This extensive tenure is underscored by an immaculate service record, entirely free of mission failures or disciplinary actions. Shepard embodies the ideal ERIDANUS CORE officer: highly competent, strategically brilliant, and unwaveringly dedicated to the corporation's expansion across the Eridani sector.", Status: "Active"},
-             2: {Role: "Chief Engineer", Expertise: "Engine Systems, Power", Record: "MEDICAL ALERT: Diagnosed with Chronic Hypersleep Syndrome (Private File).", Status: "Active"},
-             3: {Role: "Security Chief", Expertise: "Ship Layout, Codes", Record: "HIGH CLEARANCE: Corporate asset designation (Requires HR key).", Status: "Active"},
-             4: {Role: "Lead Scientist", Expertise: "Life Support, Eridani Data", Record: "Research Data Criticality: Requires access to Security Chief's core.", Status: "Active"},
-             5: {Role: "Pilot/Helmsman", Expertise: "Thrusters, Steering", Record: "Psych Evaluation: Moderate Space Crisis Phobia (Treated/Suppressed).", Status: "Active"},
-             6: {Role: "Medical Officer", Expertise: "Biology, Personnel Records", Record: "Standard: Excellent service history. Recent research on Synthetic lifeforms.", Status: "Active"},
-             7: {Role: "Xenolinguist", Expertise: "Communications, Translation", Record: "Unusual Comm Log: Detected a subtle external manipulation vector in early logs.", Status: "Active"},
-             8: {Role: "Cybernetics Specialist", Expertise: "Hacking, AI interface", Record: "Internal Investigation Flag: Suspected of covering minor system sabotage (Confidential).", Status: "Active"},
-             9: {Role: "Geologist/Miner", Expertise: "Hull Integrity, Materials", Record: "CRIMINAL RECORD FLAG: Wanted in Sector 3 for unauthorized data extraction.", Status: "Active"},
-             10: {Role: "Janitor/Tech", Expertise: "Maintenance, Fuses", Record: "IDENTITY MASK: Technician Level 5. Disgraced but highly skilled (Use HR key for verification).", "Status": "Active"},
-             11: {Role: "Unassigned", Expertise: "N/A", "Record": "Status Unknown. Cryo-pod 11 life signs flickering.", "Status": "Unknown"},
-             12: {Role: "Unassigned", Expertise: "N/A", "Record": "Status Unknown. Cryo-pod 12 breach alarm triggered.", "Status": "Unknown"}
+             1: {Name: "Aronus Zeebal", Expertise: "Ship Captain, Command", Record: "Fleet Captain C. P. Shepard, age 62, began their exemplary career by graduating at the top of their class from the Mars Naval Space Academy with a focus on Advanced Astrogation. Immediately following graduation, Shepard was recruited by the interplanetary conglomerate, ERIDANUS CORE, preferring the path of corporate logistics and deep-space resource acquisition over traditional military service. Shepard’s ascent through the ranks was swift and steady, a testament to their exceptional command presence and unmatched operational efficiency. Their sustained high performance led to the prestigious command of a Pilgrim-class vessel, a position they have held for 30 consecutive years. This extensive tenure is underscored by an immaculate service record, entirely free of mission failures or disciplinary actions. Shepard embodies the ideal ERIDANUS CORE officer: highly competent, strategically brilliant, and unwaveringly dedicated to the corporation's expansion across the Eridani sector.", Status: "Active"},
+             2: {Name: "Robert Slim", Expertise: "First Officer, Astrogation", Record: "Robert Slim is a distinguished graduate of the SolSys Command School and has served as First Officer on various Pilgrim-class freighters for the past seven years. Known for his exceptional navigational acumen and fastidious adherence to flight protocols, he is considered the model of next-generation corporate efficiency. His primary duties include maintaining all flight logs, validating course trajectories, and serving as Captain Zeebal’s direct operational superior. This mission is crucial for his career advancement, as he is formally positioned as the Captain’s successor upon Zeebal’s scheduled retirement. Slim maintains zero-tolerance for operational anomalies and is committed to ensuring the Pilgrim completes its trajectory to the Eridani sector with maximum efficiency, protecting the integrity of the official mission logs at all costs.", Status: "Active"},
+             3: {Name: "Kaatrin Rheema", Expertise: "Ship Engineer", Record: "Kaatrin Rheema is the Chief Engine Systems Specialist and has been personally responsible for maintaining the hyperdrive and thermal dynamics of the Pilgrim-class for over five cycles. A technical savant with an engineering background in advanced fluid dynamics, her expertise is considered irreplaceable for this deep-space voyage. Her duties include managing all plasma conduit integrity, monitoring power regulation systems, and ensuring the absolute stability of the hyperdrive synchronization matrix. Rheema is noted for her technical brilliance and objective, results-oriented approach; her loyalty is directed exclusively toward the flawless function of the ship’s complex machinery. Any system failure is considered a professional affront, and she has full command authority over all technical personnel and resources necessary for rapid, on-site diagnostics and repair.", Status: "Active"},
+             4: {Name: "Mathias Mendelsonne", Expertise: "Corp. Private Security, Asset Protection", Record: "Agent Mendelsonne is onboard the Pilgrim on a dual-mandate mission. He has twelve years of service in the Corporate Security Force military police, providing a highly disciplined and procedural focus on his duties, despite an early honorable discharge leading to immediate contract renewal with the CPS's Black Ops sector. His primary function is to ensure the secure transit of High-Value Detainee Prisoner and provide Tier-4 asset protection for the ship's engine core and navigation array, designated under Icarus Protocol Compliance. His extensive knowledge of ZDC infiltration tactics is critical for countering potential sabotage. Access to his full CSF and SAD records is strictly controlled by HR Key (Level 9) due to the classified nature of his past operations, and he is fully authorized to use lethal force in defense of corporate assets.", Status: "Active"},
+             5: {Name: "Sarooji Arunberg", Expertise: "Police Detective", Record: "Detective Sarooji Arunberg is a Detective 1st Grade with the Orbital Police Division (OPD), specializing in complex financial and data crime compliance. Her presence on the Pilgrim is a matter of official mandate: she is assigned as the independent law enforcement auditor for the Eridanus Corporation's high-value resource acquisition mission. Arunberg’s duties are twofold: first, she is responsible for maintaining the security and integrity of the high-profile prisoner transfer involving white-collar criminal Elara Voss, working alongside Corporate Private Security to ensure no unauthorized interference occurs. Second, upon arrival at the Eridani sector, she is tasked with conducting a transparent, government-mandated audit of the newly acquired corporate assets and infrastructure, ensuring full compliance with interplanetary regulatory law and serving as an external check on corporate activities. She operates with full independent authority but is committed to supporting the Captain and crew in the execution of the mission parameters.", Status: "Active"},
+             6: {Name: "Clark Stubel", Expertise: "External Compliance Auditor", Record: "Clark Stubel is traveling under the authority of the Coalition for Fair Resource Allocation, a non-profit organization dedicated to monitoring deep-space exploratory missions for ethical resource hoarding and regulatory compliance. His official function is to observe the Pilgrim's acquisition protocols and verify that the Eridanus Corporation adheres to all agreements established in the Sol-Eridani Treaty. Stubel is a former academic specializing in planetary logistics, providing him with a detail-oriented, legalistic approach. He is authorized access to all non-classified financial and manifest documents. The Captain and First Officer are directed to provide him with reasonable access to fulfill his auditing duties, ensuring maximum mission transparency. He is required to file a comprehensive, unbiased report to the Coalition upon the mission's completion, making his compliance a high priority for corporate public relations.", Status: "Active"},
+             7: {Name: "Ren Smith", Expertise: "Communications Technician", Record: "Ren is a specialized communications technician brought aboard to manage and maintain the Pilgrim’s experimental long-range comms array. His official expertise lies in low-level signal decryption and relay diagnostics. His mission is highly technical and passive, focused solely on ensuring the communication systems remain optimized for mission reports and corporate data transmission. He reports directly to the First Officer on all matters concerning the comms array's functionality. Rix maintains a clean security profile and has no authorization to access core ship operating systems or classified data. He is considered a replaceable, high-skilled laborer, essential for the comms array maintenance but otherwise separate from core crew operations.", Status: "Active"},
+             8: {Name: "Sooren Wandara", Expertise: "Experimental Shielding Specialist", Record: "Sooren Wandara is a specialist contracted through the Corporation's Environmental Risk Assessment (ERA) division. His official role is to operate and maintain the Pilgrim's Experimental Adaptive Shielding System (EASS)—a highly volatile, manually operated defense system designed to protect against unexpected micrometeoroid impacts in the deep Eridani sector. Wandara is noted for his physical resilience and specific training in high-G environment stabilization, making him essential for manual recalibrations of the EASS array. He has no authority over personnel but is granted priority access to the hull maintenance bays and specialized tools necessary to execute his technical defense duties. This specialized, high-risk technical expertise ensures his necessary presence on the voyage.", Status: "Active"},
+             9: {Name: "Graython Coates", Expertise: "Corporation Boardmember", Record: "Mr. Graython Coates is a Senior Board Director for the Eridanus Corporation, accompanying the mission as the official representative of the corporate leadership. His duties include certifying the mission's financial and logistical execution, ensuring compliance with shareholder mandates, and providing executive oversight for the transition of the Pilgrim into a permanent corporate asset upon arrival at the Eridani sector. He holds executive-level clearance over all non-operational aspects of the mission and reports directly to the corporate board. His presence ensures maximum accountability and integrity for this high-value endeavor. It is imperative that all crew members treat Mr. Coates with the deference due his rank and cooperate fully with any requests related to mission oversight and compliance.", Status: "Active"},
+             10: {Name: "Bela Rovinskaia", Expertise: "Convict", Record: "Bela Rovinskaia is currently being transported under maximum security protocols to the Delta-7 Penal Colony to stand trial for egregious acts of deep-space tax evasion and unauthorized corporate data extraction. A former high-ranking financial analyst for the Eridanus Corporation, Rovinskaia was apprehended attempting to liquidate substantial company assets and siphon funds into untraceable orbital accounts. Her containment is mandated by the Orbital Police Division and secured by Corporate Private Security, requiring a Tier-3 security clearance (Agent Mendelsonne is the primary custodian). The official reason for her transfer aboard the Pilgrim is to minimize public exposure of the criminal case and ensure the rapid restitution of stolen funds. Any attempt to communicate with, free, or otherwise interfere with Detainee Rovinskaia is punishable by full corporate law and will be treated as an act of treason and obstruction of justice.", "Status": "Active"},
+             11: {Name: "Unassigned", Expertise: "N/A", "Record": "Status Unknown. Cryo-pod 11 life signs flickering.", "Status": "Unknown"},
+             12: {Name: "Unassigned", Expertise: "N/A", "Record": "Status Unknown. Cryo-pod 12 breach alarm triggered.", "Status": "Unknown"}
         };
 
         // FULL NAV PUZZLE DATA
@@ -571,17 +679,6 @@
             const engDiv = document.getElementById('engineStatus');
             engDiv.className = shipData.engine.status.includes("FAILURE") ? "value critical" : "value nominal";
 
-	    const coordDiv = document.getElementById('coordStatus');
-            if (shipData.coords.status.includes("CORRUPTED") || shipData.coords.status.includes("NO DATA")) {
-                coordDiv.className = "value critical"; // Red text
-            } else if (shipData.coords.status.includes("READY")) {
-                coordDiv.className = "value warning"; // Warning color for ready/unlocked but not final
-            } else if (shipData.coords.status.includes("LOCKED")) {
-                coordDiv.className = "value nominal"; // Cyan text for fixed/locked
-            } else {
-                 coordDiv.className = "value nominal";
-            }
-
             // Gauge
             const gauge = document.getElementById('o2Gauge');
             gauge.style.width = shipData.o2.level + "%";
@@ -674,13 +771,13 @@
             updateDashboard();
         }
 
-        // --- PERSONNEL FUNCTIONS ---
+        // --- PERSONNEL FUNCTIONS (REMOVED ACCESS LOCKS) ---
         function displayCrewList() {
             const list = document.getElementById('crewList');
             list.innerHTML = '';
             for(let i=1; i<=12; i++) {
                 let li = document.createElement('li');
-                li.innerText = `ID ${i.toString().padStart(2, '0')}: ${PLAYER_PROFILES[i].Role}`;
+                li.innerText = `ID ${i.toString().padStart(2, '0')}: ${PLAYER_PROFILES[i].Name}`;
                 list.appendChild(li);
             }
         }
@@ -696,25 +793,17 @@
 
             const p = PLAYER_PROFILES[id];
             
-            let content = `ID: ${id}\nROLE: ${p.Role}\nSTATUS: ${p.Status}\nEXPERT: ${p.Expertise}\n`;
-            let granted = false;
-
-            if(id === 2) { // Medic
-                let pass = prompt("ENTER MEDICAL KEY (Level 4):").toUpperCase().trim();
-                if(pass === PASSWORD_MEDIC) { granted = true; }
-                else { content += "\n[ACCESS DENIED: INVALID KEY]"; }
-            } else if (id === 3 || id === 9 || id === 10) { // HR
-                let pass = prompt("ENTER HR KEY (Level 9):").toUpperCase().trim();
-                if(pass === PASSWORD_HR) { granted = true; }
-                else { content += "\n[ACCESS DENIED: INVALID KEY]"; }
-            } else {
-                granted = true; // Public file
-            }
-
+            let content = `ID: ${id}\nNAME: ${p.Name}\nSTATUS: ${p.Status}\nEXPERT: ${p.Expertise}\n`;
+            
+            // --- ALL ACCESS GRANTED ---
+            let granted = true; 
+            
             if(granted) {
                 content += `\nRECORD:\n${p.Record}`;
                 appendToLog(`[SYS] ACCESSED FILE ID ${id}`);
             } else {
+                // This path should never be reached
+                content += "\n[ACCESS DENIED: CONTACT ADMIN]";
                 appendToLog(`[SEC] ACCESS DENIED ID ${id}`);
             }
 
@@ -739,7 +828,7 @@
                 document.getElementById('engineCodeInput').value = "FIXED";
                 document.getElementById('engineCodeInput').disabled = true;
 
-                // Change engine image to fixed version
+                // NEW LOGIC: Change image to fixed version
                 const engineImage = document.getElementById('engineStatusImage');
                 if (engineImage) {
                     engineImage.src = "shipenginesfixed.png";
@@ -761,15 +850,12 @@
                 document.getElementById('hullCodeInput').value = "FIXED";
                 document.getElementById('hullCodeInput').disabled = true;
                 
-                // 2. NEW LOGIC TO CHANGE HULL IMAGE
+                // NEW CODE: Change image to fixed version
                 const hullImage = document.getElementById('hullStatusImage');
                 if (hullImage) {
-                    hullImage.src = "shipimage2.png";
-                    // Change the border color to reflect the 'fixed' status
-                    hullImage.style.borderColor = "var(--primary-color)"; 
+                    hullImage.src = "shipimage2.png"; // <-- IMAGE SOURCE CHANGED HERE
+                    hullImage.style.borderColor = "var(--primary-color)"; // Set border to nominal color
                 }
-                // END NEW LOGIC
-
             } else if (hCode && hCode !== HULL_FIX_CODE && !shipData.hull.status.includes("NOMINAL")) {
                 appendToLog("[ERR] HULL CODE INVALID.");
             }
